@@ -19,13 +19,8 @@ export default function useOrder() {
   const handleOrder = async ({ menu, totalPrice }: UseOrderProps) => {
     const response: AxiosResponse<Receipt> = await axios.post(
       'http://localhost:3000/orders',
-      {
-        headers: { 'Content-Type': 'Application/json' },
-        body: {
-          menu,
-          totalPrice,
-        },
-      },
+      { menu, totalPrice },
+      { headers: { 'Content-Type': 'Application/json' } },
     );
     const { data } = response;
     setReceipt(data);
