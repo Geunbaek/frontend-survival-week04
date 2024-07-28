@@ -1,5 +1,9 @@
+import axios from 'axios';
+
 import { useInterval, useLocalStorage } from 'usehooks-ts';
-import { Receipt, RestaurantMenu } from '../types';
+
+import type { AxiosResponse } from 'axios';
+import type { Receipt, RestaurantMenu } from '../types';
 
 interface UseOrderProps {
   menu: RestaurantMenu[];
@@ -13,16 +17,17 @@ export default function useOrder() {
   );
 
   const handleOrder = async ({ menu, totalPrice }: UseOrderProps) => {
-    const response = await fetch('http://localhost:3000/orders', {
-      headers: { 'Content-Type': 'Application/json' },
-      method: 'POST',
-      body: JSON.stringify({
-        menu,
-        totalPrice,
-      }),
-    });
-
-    const data: Receipt = await response.json();
+    const response: AxiosResponse<Receipt> = await axios.post(
+      'http://localhost:3000/orders',
+      {
+        headers: { 'Content-Type': 'Application/json' },
+        body: {
+          menu,
+          totalPrice,
+        },
+      },
+    );
+    const { data } = response;
     setReceipt(data);
   };
   useInterval(
